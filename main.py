@@ -10,7 +10,7 @@ def Isaretliler(resim):
     return cb.cevaplariListele(esikAyar=100, bulanikFirca=19)
 
 if __name__ == '__main__':
-    print(Isaretliler('resimler/c3.jpg'))
+    print(Isaretliler('c1.jpg'))
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
