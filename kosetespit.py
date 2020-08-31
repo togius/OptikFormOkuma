@@ -48,10 +48,12 @@ class KoseTespit:
     def __konturBul(self):
         blur = cv2.GaussianBlur(self.img, (17, 17), 0)
         gri = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
-        # _,esik = cv2.threshold(gri,100,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-        kenar = cv2.Canny(gri, 25, 100)
+        _,kenar = cv2.threshold(gri,100,255,cv2.THRESH_BINARY_INV)
+        # kenar = cv2.Canny(gri, 25, 100)
+        # kenar = cv2.Canny(gri, 25, 150)
+
         kernel = np.ones((11, 11), np.uint8) / 255
-        genisleme = cv2.dilate(kenar, kernel, iterations=1)
+        genisleme = cv2.erode(kenar, kernel, iterations=1)
 
         konturlar, hiyerarsi = cv2.findContours(genisleme.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         konturlar = sorted(konturlar, key=cv2.contourArea, reverse=True)
@@ -63,9 +65,11 @@ class KoseTespit:
 
         if len(konturlar) >= 4:
             konturlar = konturlar[0:4]
+            #kontur kare seklindeyse
             for kontur in konturlar:
                 (x, y), yariCap = cv2.minEnclosingCircle(kontur)
                 cv2.circle(self.img, (int(x), int(y)), radius=int(yariCap), color=(0, 255, 0), thickness=2)
+
                 koseler.append((x, y))
             # corners = np.array(koseler, dtype="float32")
             yamuk = self.__ayarlanmis(self.img, koseler)
